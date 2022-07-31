@@ -1,0 +1,16 @@
+server:
+  port: ${SERVICE_PORT:9090}
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL:jdbc:mysql://103.138.88.75:3306/nha72484_ql_nhaxe}
+    username: ${DB_USER:nha72484_admin}
+    password: ${DB_PASSWORD:toanthong123}
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+  main:
+    allow-circular-references: true
+jwt:
+  secret: leminhquang
