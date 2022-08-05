@@ -1,0 +1,46 @@
+.busSeat {
+  position: relative;
+  width: 50px !important;
+  height: 50px !important;
+  transform: rotate(-90deg);
+  flex-grow: unset;
+  cursor: pointer;
+  .textBus {
+    position: absolute;
+    top: 50%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    color: #0e2ae4aa;
+    font-weight: 900;
+  }
+}
+
+.busSeat:hover {
+  background-color: yellow;
+  border-radius: 50%;
+}
+
+.booked {
+  width: 15px;
+  height: 15px;
+  background: #ff0000;
+  margin-top: 3px;
+}
+
+.still {
+  width: 15px;
+  height: 15px;
+  background: aqua;
+  margin-top: 3px;
+}
+
+.select {
+    width: 15px;
+    height: 15px;
+    background: yellow;
+    margin-top: 3px;
+}
+
+.MuiDialog-paperWidthSm {
+     max-width: 1000px !important; 
+}

@@ -1,0 +1,24 @@
+.father{
+    width:100%;
+    overflow:auto;
+    table, th, td{
+        border:1px solid #ccc;
+    }
+    table{
+        border-collapse:collapse;
+        width:100%;
+    }
+    table tr:nth-child(odd){
+        background-color:#eee;
+    }
+    table tr:nth-child(even){
+        background-color:white;
+    }
+    .table-header{
+        background-color:skyblue !important;
+    }
+    th, td{
+        text-align:left;
+        padding:10px;
+    }
+}

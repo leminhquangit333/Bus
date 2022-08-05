@@ -1,11 +1,7 @@
 package com.quangminhle.server.service.impl;
 
-import com.quangminhle.server.dto.BusDetailDto;
-import com.quangminhle.server.dto.BusDto;
-import com.quangminhle.server.entity.Bus;
-import com.quangminhle.server.entity.BusTicket;
-import com.quangminhle.server.entity.Scheduce;
-import com.quangminhle.server.entity.Seat;
+import com.quangminhle.server.dto.*;
+import com.quangminhle.server.entity.*;
 import com.quangminhle.server.repository.BusRepository;
 import com.quangminhle.server.repository.ScheduceRepository;
 import com.quangminhle.server.repository.SeatRepository;
@@ -14,6 +10,7 @@ import com.quangminhle.server.uitls.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,6 +27,7 @@ public class BusServiceImpl implements BusService {
 
   @Autowired
   private ScheduceRepository scheduceRepository;
+  private Bus bus;
 
   /**
    * @param start
@@ -42,7 +40,10 @@ public class BusServiceImpl implements BusService {
     start = dateUtils.getAtStartDate(start);
     end = dateUtils.getAtEndDate(end);
     log.info("start get bus start date {} end date {}", start, end);
-    List<Scheduce> scheduceList = scheduceRepository.findDetailByDate(start, end);
+    List<Scheduce> scheduceList = scheduceRepository.findDetailByDate(start, end)
+            .stream()
+            .sorted(Comparator.comparing(Scheduce::getStartDate).reversed())
+            .collect(Collectors.toList());
     List<BusDetailDto> result = new ArrayList<>();
     for (Scheduce scheduce : scheduceList) {
       BusDetailDto busDetailDto = new BusDetailDto();
@@ -97,6 +98,49 @@ public class BusServiceImpl implements BusService {
     return busDetailDto;
   }
 
+  @Override
+  @Transactional
+  public Long saveBus(BusDto busDetail) throws Exception {
+    Bus bus = new Bus();
+    if (Objects.nonNull(busDetail.getId())) {
+      Optional<Bus> busOptional = busRepository.findById(busDetail.getId());
+      if (!busOptional.isPresent()) {
+        throw new Exception("error get bus");
+      }
+      bus = busOptional.get();
+    }
+    bus.setBusName(busDetail.getBusName());
+    bus.setLicensePlate(busDetail.getLicensePlate());
+    bus.setNumberOfSeat(busDetail.getNumberOfSeat());
+    bus.setNumberOfExtraSeat(busDetail.getNumberOfExtraSeat());
+    busRepository.save(bus);
+    return bus.getId();
+  }
+
+  @Override
+  public ExportDto exportScheduce(Long scheduceId) throws Exception {
+    Optional<Scheduce> scheduceOptional
+            = this.scheduceRepository.findById(scheduceId);
+    if (!scheduceOptional.isPresent()) {
+      throw new Exception("error get scheduce");
+    }
+
+    Scheduce scheduce = scheduceOptional.get();
+
+    List<BusTicketExportDto> busTicketExportDtos = new ArrayList<>();
+    for(BusTicket busTicket : scheduce.getBusTicketList()){
+      BusTicketExportDto busTicketExportDto = new BusTicketExportDto(busTicket);
+      busTicketExportDtos.add(busTicketExportDto);
+    }
+    List<CommodityTicketExportDto> commodityTicketExportDtos = new ArrayList<>();
+    for(CommodityTicket commodityTicket : scheduce.getCommodityTicketList()){
+      CommodityTicketExportDto commodityTicketExportDto = new CommodityTicketExportDto(commodityTicket);
+      commodityTicketExportDtos.add(commodityTicketExportDto);
+    }
+    return new ExportDto(busTicketExportDtos,commodityTicketExportDtos);
+
+  }
+
   /**
    * set value to bus detail
    *
@@ -109,6 +153,8 @@ public class BusServiceImpl implements BusService {
     busDetailDto.setStartDate(scheduce.getStartDate().getTime());
     busDetailDto.setBusId(scheduce.getBus().getId());
     busDetailDto.setScheduceId(scheduce.getId());
+    busDetailDto.setDeparture(scheduce.getDeparture().getName());
+    busDetailDto.setDestination(scheduce.getDestination().getName());
     busDetailDto.setNumOfFreeSeat(scheduce.getBus().getNumberOfSeat()
             + scheduce.getBus().getNumberOfExtraSeat()
             - scheduce.getBusTicketList().size());

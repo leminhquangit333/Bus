@@ -1,7 +1,5 @@
 package com.quangminhle.server.controller;
 
-import java.util.Objects;
-
 import com.quangminhle.server.config.JwtTokenUtil;
 import com.quangminhle.server.dto.JwtRequest;
 import com.quangminhle.server.dto.JwtResponse;
@@ -36,14 +34,20 @@ public class JwtAuthenticationController {
 	@RequestMapping(value = "/api/login", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
-		authenticate(authenticationRequest.getUserName(), authenticationRequest.getPassword());
+		try{
+			authenticate(authenticationRequest.getUserName(), authenticationRequest.getPassword());
 
-		final UserDetails userDetails = userDetailsService
-				.loadUserByUsername(authenticationRequest.getUserName());
+			final UserDetails userDetails = userDetailsService
+							.loadUserByUsername(authenticationRequest.getUserName());
 
-		final String token = jwtTokenUtil.generateToken(userDetails);
-
-		return ResponseEntity.ok(new JwtResponse(token));
+			final String token = jwtTokenUtil.generateToken(userDetails);
+			if(token.isEmpty()){
+				throw new Exception("no token");
+			}
+			return ResponseEntity.ok(new JwtResponse(token));
+		} catch (Exception ex){
+			throw new Exception("no token");
+		}
 	}
 	
 	@RequestMapping(value = "/api/register", method = RequestMethod.POST)

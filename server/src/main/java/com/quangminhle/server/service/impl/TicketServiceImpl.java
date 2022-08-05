@@ -39,22 +39,26 @@ public class TicketServiceImpl implements TicketService {
    * @return
    */
   @Override
-  public TicketDto bookTicket(TicketDto ticketDto) {
-    Optional<Seat> seatOptional = seatRepository.findById(ticketDto.getSeatId());
-    if (!seatOptional.isPresent()) {
-      return null;
-    }
+  @Transactional
+  public List<TicketDto> bookTicket(List<TicketDto> ticketDtos) {
+    List<BusTicket> busTickets = new ArrayList<>();
+    for(TicketDto ticketDto : ticketDtos){
+      Optional<Seat> seatOptional = seatRepository.findById(ticketDto.getSeatId());
+      if (!seatOptional.isPresent()) {
+        return null;
+      }
 
-    Optional<Scheduce> scheduceOptional = scheduceRepository.findById(ticketDto.getScheduleId());
-    if (!scheduceOptional.isPresent()) {
-      return null;
+      Optional<Scheduce> scheduceOptional = scheduceRepository.findById(ticketDto.getScheduleId());
+      if (!scheduceOptional.isPresent()) {
+        return null;
+      }
+      BusTicket busTicket = new BusTicket(null, ticketDto.getCustomerName(), ticketDto.getCode(),
+              ticketDto.getCustomerPhone(), ticketDto.getNote(), ticketDto.getPrice(), seatOptional.get(),
+              scheduceOptional.get(), ticketDto.getDeparture(), ticketDto.getDestination());
+      busTickets.add(busTicket);
     }
-    BusTicket busTicket = new BusTicket(null, ticketDto.getCustomerName(), ticketDto.getCode(),
-            ticketDto.getCustomerPhone(), ticketDto.getNote(), ticketDto.getPrice(), seatOptional.get(),
-            scheduceOptional.get(), ticketDto.getDeparture(), ticketDto.getDestination());
-    busTicketRepository.save(busTicket);
-    TicketDto ticket = new TicketDto(busTicket);
-    return ticket;
+    busTicketRepository.saveAll(busTickets);
+    return ticketDtos;
   }
 
   @Override

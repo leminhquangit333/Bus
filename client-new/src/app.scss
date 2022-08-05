@@ -1,0 +1,16 @@
+.page {
+  background-image: url("background.jpg");
+  height: 100%;
+  background-size: 100% 100%;
+}
+
+.text {
+	text-transform: uppercase;
+	background: linear-gradient(to right, #30CFD0 0%, #330867 100%);
+	background-clip: text;
+	color: transparent;
+}
+
+.full-width{
+	width: 100%;
+}

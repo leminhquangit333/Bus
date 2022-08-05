@@ -28,6 +28,9 @@ public class Scheduce {
     @OneToMany(mappedBy = "scheduce", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BusTicket> busTicketList;
 
+    @OneToMany(mappedBy = "scheduce", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CommodityTicket> commodityTicketList;
+
     private Date startDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

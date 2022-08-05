@@ -1,0 +1,56 @@
+.header{
+    background-color:#f3a10b;
+}
+
+img {
+    border-radius: 50%;
+  }
+
+.box {
+	display: flex;
+}
+
+.box .inner {
+	width: 275px;
+	height: 50;
+	line-height: 75px;
+	font-size: 1em;
+	font-family: sans-serif;
+	font-weight: bold;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.box .inner:first-child {
+	background-color: #C49A68;
+	color: yellow;
+	transform-origin: right;
+	transform: perspective(100px) rotateY(-15deg);
+}
+
+.box .inner:last-child {
+	background-color: #FEFDA1;
+	color: RED;
+	transform-origin: left;
+	transform: perspective(100px) rotateY(15deg);
+}
+
+.box .inner span {
+	position: absolute;
+	animation: marquee 10s linear infinite;
+}
+
+.box .inner:first-child span {
+	animation-delay: 5s;
+	left: -100%;
+}
+
+@keyframes marquee {
+	from {
+		left: 100%;
+	}
+
+	to {
+		left: -100%;
+	}
+}

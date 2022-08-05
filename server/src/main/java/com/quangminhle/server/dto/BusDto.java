@@ -13,11 +13,17 @@ public class BusDto {
 
   private String licensePlate;
 
-  private String name;
+  private String busName;
+
+  private Integer numberOfSeat;
+
+  private Integer numberOfExtraSeat;
 
   public BusDto(Bus bus) {
     this.id = bus.getId();
     this.licensePlate = bus.getLicensePlate();
-    this.name = bus.getBusName();
+    this.busName = bus.getBusName();
+    this.numberOfSeat = bus.getNumberOfSeat();
+    this.numberOfExtraSeat = bus.getNumberOfExtraSeat();
   }
 }

@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface TicketService {
-    TicketDto bookTicket(TicketDto ticketDto);
+    List<TicketDto> bookTicket(List<TicketDto> ticketDtos);
 
     Long deleteTicket(TicketDto ticketDto) throws Exception;
 

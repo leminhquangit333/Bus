@@ -26,4 +26,8 @@ public class BusDetailDto {
     private List<Seat> seats;
 
     private Integer numOfFreeSeat;
+
+    private String departure;
+
+    private String destination;
 }
